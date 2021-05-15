@@ -41,7 +41,7 @@ jobs:
       matrix:
         ###### EDIT HERE ######
         EDITION: [awesome]
-        BRANCH: [stable]
+        BRANCH: [stable-staging]
         SCOPE: [minimal]
         #######################
     steps:
