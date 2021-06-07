@@ -42,7 +42,7 @@ jobs:
         ###### EDIT HERE ######
         EDITION: [awesome]
         BRANCH: [testing]
-        SCOPE: [minimal]
+        SCOPE: [full]
         #######################
     steps:
       - 
