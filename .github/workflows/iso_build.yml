@@ -120,10 +120,10 @@ jobs:
         run: |          
           pkgver=24
           sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v24.tar.gz
-          sudo tar -xvf arch-install-scripts-$pkgver.tar.gz
-          sudo make -C arch-install-scripts-$pkgver
-          sudo make -C arch-install-scripts-$pkgver check
-          sudo make -C arch-install-scripts-$pkgver PREFIX=/usr install
+          sudo tar -xvf v24.tar.gz
+          sudo make -C v24
+          sudo make -C v24 check
+          sudo make -C v24 PREFIX=/usr install
           
           sudo wget https://gitlab.manjaro.org/applications/pacman-mirrors/-/raw/v4.19x-stable/conf/pacman-mirrors.conf -O /etc/pacman-mirrors.conf
       -
