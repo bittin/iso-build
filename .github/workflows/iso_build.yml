@@ -1,63 +1,64 @@
 name: iso_build
 on:
-  schedule:
-    - cron:  '2 2 * * *'
   workflow_dispatch:
-  repository_dispatch:
-    types: [iso_profile_update]
+  schedule:
+    - cron:  '45 2 * * *'
 
 jobs:
-  prepare-release:
+  prepare_release:
     runs-on: ubuntu-20.04
     steps:
       - 
+        name: Prepare Cancel Workflow
         uses: styfle/cancel-workflow-action@0.9.0
         with:
           access_token: ${{ github.token }}
       - 
+        name: Get current time
         id: time
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YYYYMMDDHHmm'
+      - 
+        name: Prepare Release
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.time.outputs.time }}
+          release_name: Release ${{ steps.time.outputs.time }}
+          body: |
+            Linux Kernel:
+            - linux510
+          draft: false
+          prerelease: false
     outputs:
-      release_tag: ${{ steps.time.outputs.time }}
-  build-release:
+      upload_url: ${{ steps.release.outputs.upload_url }}
+      release_id: ${{ steps.release.outputs.id }}
+
+  release:
     runs-on: ubuntu-20.04
-    needs: [prepare-release]
+    needs: prepare_release    
     strategy:
       matrix:
-        EDITION: [awesome]
+        ###### EDIT HERE ######
+        EDITION: [awessome]
         BRANCH: [stable]
         SCOPE: [minimal]
+        #######################
     steps:
       - 
+        name: Prepare Cancel Workflow
         uses: styfle/cancel-workflow-action@0.9.0
         with:
           access_token: ${{ github.token }}
-      -
-        name: image-build-upload
-        uses: Manjaro/manjaro-iso-action@main
-        with:
-          iso-profiles-repo: https://github.com/bittin/iso-profiles
-          edition: ${{ matrix.edition }}
-          branch: ${{ matrix.branch }}
-          scope: ${{ matrix.scope }}
-          version: "21.0"
-          kernel: linux512
-          code-name: "Ornara"
-          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
-      -
-        name: rollback
-        if: ${{ failure() || cancelled() }}
-        run: |
-          echo ${{ github.token }} | gh auth login --with-token
-          gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
       - 
         name: Checkout ISO-Profiles
         uses: actions/checkout@v2
         with:
           ###### EDIT HERE ######
-          repository: bittin/iso-profiles-1
+          repository: bittin/iso-profiles
           #######################
           token: "${{ secrets.GITHUB_TOKEN }}"
           path: 'iso-profiles'
@@ -91,12 +92,6 @@ jobs:
           cd ..
           sudo install -m644 pacman.conf /etc/pacman.conf
           sudo install -m644 makepkg.conf /etc/
-          sudo sed -i /etc/makepkg.conf \
-            -e "s|@CARCH[@]|x86_64|g" \
-            -e "s|@CHOST[@]|x86_64-pc-linux-gnu|g" \
-            -e "s|@CARCHFLAGS[@]|-march=x86-64|g"
-          sudo install -m644 etc-pacman.d-gnupg.mount /usr/lib/systemd/system/etc-pacman.d-gnupg.mount
-          sudo install -m644 pacman-init.service /usr/lib/systemd/system/pacman-init.service
           sudo mkdir -p /etc/pacman.d
           sudo touch /etc/pacman.d/mirrorlist
           cd ..
@@ -124,11 +119,11 @@ jobs:
         name: Install Arch-Install-Scripts
         run: |          
           pkgver=24
-          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v${VERSION}.tar.gz -O arch-install-scripts.tar.gz
-          sudo tar -xvf arch-install-scripts.tar.gz
-          sudo make -C arch-install-scripts-${VERSION}
-          sudo make -C arch-install-scripts-${VERSION} check
-          sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
+          sudo wget https://codeload.github.com/archlinux/arch-install-scripts/tar.gz/refs/tags/v$pkgver/arch-install-scripts-$pkgver.tar.gz
+          sudo tar -xvf arch-install-scripts-$pkgver.tar.gz
+          sudo make -C arch-install-scripts-$pkgver
+          sudo make -C arch-install-scripts-$pkgver check
+          sudo make -C arch-install-scripts-$pkgver PREFIX=/usr install
           
           sudo wget https://gitlab.manjaro.org/applications/pacman-mirrors/-/raw/v4.19x-stable/conf/pacman-mirrors.conf -O /etc/pacman-mirrors.conf
       -
@@ -147,9 +142,9 @@ jobs:
       -
         name: Install MkInitcpio
         run: |          
-          sudo wget https://git.archlinux.org/mkinitcpio.git/snapshot/mkinitcpio-29.tar.gz
-          sudo tar -xf mkinitcpio-29.tar.gz
-          sudo make -C mkinitcpio-29 install
+          sudo wget https://sources.archlinux.org/other/mkinitcpio/mkinitcpio-30.tar.gz
+          sudo tar -xf mkinitcpio-30.tar.gz
+          sudo make -C mkinitcpio-30 install
           sudo sed -i -e 's|File|Path|' /usr/share/libalpm/hooks/*hook
       -
         name: Install Manjaro-Tools
@@ -173,7 +168,7 @@ jobs:
           SCOPE: ${{ matrix.SCOPE }}
           VERSION: ${{ steps.time.outputs.time }}-development
           ###### EDIT HERE ######
-          KERNEL: "linux512"
+          KERNEL: "linux510"
           CODE_NAME: "Community-Build"
           #######################
         run: |                
