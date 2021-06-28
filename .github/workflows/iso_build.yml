@@ -121,12 +121,12 @@ jobs:
       -
         name: Install Arch-Install-Scripts
         run: |          
-          pkgver=23
-          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v24.tar.gz
-          sudo tar -xvf v24.tar.gz
-          sudo make -C v24
-          sudo make -C v24 check
-          sudo make -C v24 PREFIX=/usr install
+          pkgver=24
+          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v${VERSION}.tar.gz -O arch-install-scripts.tar.gz
+          sudo tar -xvf arch-install-scripts.tar.gz
+          sudo make -C arch-install-scripts-${VERSION}
+          sudo make -C arch-install-scripts-${VERSION} check
+          sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
           
           sudo wget https://gitlab.manjaro.org/applications/pacman-mirrors/-/raw/v4.19x-stable/conf/pacman-mirrors.conf -O /etc/pacman-mirrors.conf
       -
