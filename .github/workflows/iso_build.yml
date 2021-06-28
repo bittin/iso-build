@@ -30,7 +30,7 @@ jobs:
           release_name: Release ${{ steps.time.outputs.time }}
           body: |
             Linux Kernel:
-            - linux510
+            - linux512
           draft: false
           prerelease: false
     outputs:
@@ -168,7 +168,7 @@ jobs:
           SCOPE: ${{ matrix.SCOPE }}
           VERSION: ${{ steps.time.outputs.time }}-development
           ###### EDIT HERE ######
-          KERNEL: "linux510"
+          KERNEL: "linux512"
           CODE_NAME: "Community-Build"
           #######################
         run: |                
