@@ -119,7 +119,7 @@ jobs:
         name: Install Arch-Install-Scripts
         run: |          
           pkgver=24
-          sudo wget https://codeload.github.com/archlinux/arch-install-scripts/tar.gz/refs/tags/v$pkgver/arch-install-scripts-$pkgver.tar.gz
+          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v24.tar.gz
           sudo tar -xvf arch-install-scripts-$pkgver.tar.gz
           sudo make -C arch-install-scripts-$pkgver
           sudo make -C arch-install-scripts-$pkgver check
