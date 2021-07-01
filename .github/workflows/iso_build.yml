@@ -45,7 +45,7 @@ jobs:
         ###### EDIT HERE ######
         EDITION: [awesome]
         BRANCH: [stable]
-        SCOPE: [minimal]
+        SCOPE: [full]
         #######################
     steps:
       - 
