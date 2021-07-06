@@ -69,26 +69,32 @@ jobs:
         with:
           format: 'YY.MM'          
       -
-        name: Install Build-Dependencies
+          name: Install Build-Dependencies
         run: |
-          sudo apt-get update
-          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf haveged os-prober kwalify dosfstools libisoburn1 squashfs-tools docbook2x
-
+          sudo apt update
+          sudo apt dist-upgrade
+          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf haveged os-prober kwalify dosfstools libisoburn1 squashfs-tools docbook2x doxygen python3-pip
+          sudo pip3 install meson
+          sudo pip3 install ninja
       -
         name: Install Pacman
-        run: |          
+        run: |
+          pkgver=6.0.0
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
-          sudo wget https://sources.archlinux.org/other/pacman/pacman-5.2.2.tar.gz
-          sudo tar -xvf pacman-5.2.2.tar.gz
-          cd pacman-5.2.2
+          sudo wget https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz
+          sudo tar -xvf pacman-$pkgver.tar.xz
+          cd pacman-$pkgver
           sudo patch -p1 -i ../pacman-sync-first-option.patch
-          sudo ./configure --prefix=/usr --sysconfdir=/etc \
-            --localstatedir=/var --enable-doc \
-            --with-scriptlet-shell=/usr/bin/bash \
-            --with-ldconfig=/usr/bin/ldconfig
-          sudo make V=1
-          sudo make install
+          sudo meson --prefix=/usr \
+                     --buildtype=plain \
+                     -Ddoc=disabled \
+                     -Ddoxygen=enabled \
+                     -Dscriptlet-shell=/usr/bin/bash \
+                     -Dldconfig=/usr/bin/ldconfig \
+                     build
+          sudo meson compile -C build
+          sudo meson install -C build
           cd ..
           sudo install -m644 pacman.conf /etc/pacman.conf
           sudo install -m644 makepkg.conf /etc/
