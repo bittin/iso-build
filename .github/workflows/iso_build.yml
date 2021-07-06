@@ -1,12 +1,12 @@
-name: iso_build
+name: iso_build_linux-latest
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '45 2 * * *'
+    - cron:  '0 3 * * *'
 
 jobs:
   prepare_release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - 
         name: Prepare Cancel Workflow
@@ -45,7 +45,7 @@ jobs:
         ###### EDIT HERE ######
         EDITION: [awesome]
         BRANCH: [stable]
-        SCOPE: [minimal]
+        SCOPE: [full]
         #######################
     steps:
       - 
@@ -68,7 +68,7 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YY.MM'          
-        -
+      -
         name: Install Build-Dependencies
         run: |
           sudo apt update
@@ -125,13 +125,14 @@ jobs:
         name: Install Arch-Install-Scripts
         run: |          
           pkgver=24
-          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v24.tar.gz
-          sudo tar -xvf v24.tar.gz
-          sudo make -C arch-install-scripts-24
-          sudo make -C arch-install-scripts-24 check
-          sudo make -C arch-install-scripts-24 PREFIX=/usr install
+          sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v$pkgver.tar.gz -O arch-install-scripts-$pkgver.tar.gz
+          sudo tar -xvf arch-install-scripts-$pkgver.tar.gz
+          sudo make -C arch-install-scripts-$pkgver
+          sudo make -C arch-install-scripts-$pkgver check
+          sudo make -C arch-install-scripts-$pkgver PREFIX=/usr install
           
-          sudo wget https://gitlab.manjaro.org/applications/pacman-mirrors/-/raw/v4.19x-stable/conf/pacman-mirrors.conf -O /etc/pacman-mirrors.conf
+          branch=v4.21.x-stable
+          sudo wget https://gitlab.manjaro.org/applications/pacman-mirrors/-/raw/$branch/conf/pacman-mirrors.conf -O /etc/pacman-mirrors.conf
       -
         name: Install Calamares-Tools
         run: |          
@@ -147,10 +148,11 @@ jobs:
           install_cal_tools
       -
         name: Install MkInitcpio
-        run: |          
-          sudo wget https://sources.archlinux.org/other/mkinitcpio/mkinitcpio-30.tar.gz
-          sudo tar -xf mkinitcpio-30.tar.gz
-          sudo make -C mkinitcpio-30 install
+        run: |
+          pkgver=30
+          sudo wget https://sources.archlinux.org/other/mkinitcpio/mkinitcpio-$pkgver.tar.gz
+          sudo tar -xf mkinitcpio-$pkgver.tar.gz
+          sudo make -C mkinitcpio-$pkgver install
           sudo sed -i -e 's|File|Path|' /usr/share/libalpm/hooks/*hook
       -
         name: Install Manjaro-Tools
@@ -172,10 +174,10 @@ jobs:
           EDITION: ${{ matrix.EDITION }}
           BRANCH: ${{ matrix.BRANCH }}
           SCOPE: ${{ matrix.SCOPE }}
-          VERSION: ${{ steps.time.outputs.time }}-development
           ###### EDIT HERE ######
           KERNEL: "linux512"
-          CODE_NAME: "Community-Build"
+          CODE_NAME: "Ornara"
+          VERSION: "21.0"
           #######################
         run: |                
           [ "$SCOPE" == "minimal" ] && unset SCOPE
@@ -260,5 +262,14 @@ jobs:
         uses: author/action-rollback@stable
         with:
           release_id: ${{ needs.prepare_release.outputs.release_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Cleanup Releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          repo: pheiduck/iso-build
+          keep_latest: 2
+          delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
