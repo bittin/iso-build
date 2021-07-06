@@ -68,8 +68,8 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YY.MM'          
-      -
-          name: Install Build-Dependencies
+        -
+        name: Install Build-Dependencies
         run: |
           sudo apt update
           sudo apt dist-upgrade
