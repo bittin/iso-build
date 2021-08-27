@@ -42,7 +42,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "21.1"
+          version: "21.1.1"
           kernel: linux513
           code-name: "Pahvo"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
