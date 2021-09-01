@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         EDITION: [awesome]
-        BRANCH: [stable]
+        BRANCH: [stable-staging, testing, unstable]
         SCOPE: [minimal, full]
     steps:
       - 
