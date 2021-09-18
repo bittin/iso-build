@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         EDITION: [awesome]
-        BRANCH: [stable-staging]
+        BRANCH: [testing]
         SCOPE: [minimal, full]
     steps:
       - 
@@ -42,7 +42,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           scope: ${{ matrix.scope }}
-          version: "21.1.2"
+          version: "21.1.3.1"
           kernel: linux514
           code-name: "Pahvo"
           release-tag: ${{ needs.prepare-release.outputs.release_tag }}
