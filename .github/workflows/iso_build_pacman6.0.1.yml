@@ -79,7 +79,7 @@ jobs:
       -
         name: Install Pacman
         run: |
-          pkgver=6.0.0
+          pkgver=6.0.1
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
           sudo wget https://sources.archlinux.org/other/pacman/pacman-$pkgver.tar.xz
