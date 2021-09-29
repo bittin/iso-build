@@ -175,9 +175,9 @@ jobs:
           BRANCH: ${{ matrix.BRANCH }}
           SCOPE: ${{ matrix.SCOPE }}
           ###### EDIT HERE ######
-          KERNEL: "linux512"
-          CODE_NAME: "Ornara"
-          VERSION: "21.0.7"
+          KERNEL: "linux513"
+          CODE_NAME: "Pahvo"
+          VERSION: "21.1.3"
           #######################
         run: |                
           [ "$SCOPE" == "minimal" ] && unset SCOPE
