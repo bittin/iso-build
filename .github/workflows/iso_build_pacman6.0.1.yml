@@ -30,7 +30,7 @@ jobs:
           release_name: Release ${{ steps.time.outputs.time }}
           body: |
             Linux Kernel:
-            - linux513
+            - linux514
           draft: false
           prerelease: false
     outputs:
@@ -175,9 +175,9 @@ jobs:
           BRANCH: ${{ matrix.BRANCH }}
           SCOPE: ${{ matrix.SCOPE }}
           ###### EDIT HERE ######
-          KERNEL: "linux513"
+          KERNEL: "linux514"
           CODE_NAME: "Pahvo"
-          VERSION: "21.1.4"
+          VERSION: "21.1.5"
           #######################
         run: |                
           [ "$SCOPE" == "minimal" ] && unset SCOPE
