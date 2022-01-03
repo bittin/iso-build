@@ -177,7 +177,7 @@ jobs:
           ###### EDIT HERE ######
           KERNEL: "linux515"
           CODE_NAME: "Qonos"
-          VERSION: "21.2"
+          VERSION: "21.2.1"
           #######################
         run: |                
           [ "$SCOPE" == "minimal" ] && unset SCOPE
