@@ -30,7 +30,7 @@ jobs:
           release_name: Release ${{ steps.time.outputs.time }}
           body: |
             Linux Kernel:
-            - linux514
+            - linux516
           draft: false
           prerelease: false
     outputs:
