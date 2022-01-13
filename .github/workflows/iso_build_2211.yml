@@ -38,8 +38,8 @@ jobs:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
         access_token: ${{ github.token }}
-        - name: image-build-upload
         uses: Manjaro/manjaro-iso-action@v2.6
+        - name: image-build-upload
         with:
           iso-profiles-repo: https://github.com/bittin/iso-profiles-1
           edition: ${{ matrix.edition }}
