@@ -29,6 +29,7 @@ jobs:
     needs: [prepare-release]
     continue-on-error: ${{ matrix.experimental }}
     strategy:
+      fail-fast: false
       matrix:
         experimental: [false]
         edition: [awesome]
