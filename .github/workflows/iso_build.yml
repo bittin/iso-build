@@ -27,9 +27,11 @@ jobs:
   build-release:
     runs-on: ubuntu-20.04
     needs: [prepare-release]
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
+        experimental: [false]
         edition: [awesome]
         branch: [stable, unstable]
         scope: [full, minimal]
@@ -37,6 +39,9 @@ jobs:
           - ${{ needs.prepare-release.outputs.mainline }}
           - ${{ needs.prepare-release.outputs.longterm }}
           - ${{ needs.prepare-release.outputs.stable }}
+        include:
+          - kernel: ${{ needs.prepare-release.outputs.mainline }}
+            experimental: true
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
