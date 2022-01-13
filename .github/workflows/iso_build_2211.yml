@@ -7,9 +7,9 @@ on:
     types: [iso_profile_update]
 
 jobs:
-prepare-release:
-runs-on: ubuntu-20.04
-steps:
+  prepare-release:
+    runs-on: ubuntu-20.04
+    steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
@@ -23,12 +23,12 @@ steps:
       release_tag: ${{ steps.time.outputs.time }}
       longterm: ${{ steps.receive.outputs.longterm-pkg }}
       stable: ${{ steps.receive.outputs.stable-pkg }}
-    build-release:
+  build-release:
     runs-on: ubuntu-20.04
     needs: [prepare-release]
     strategy:
       matrix:
-        edition: [awesome]
+        edition: [sway]
         branch: [stable, unstable]
         scope: [full, minimal]
         kernel: 
@@ -38,7 +38,7 @@ steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
-     - name: image-build-upload
+      - name: image-build-upload
         uses: Manjaro/manjaro-iso-action@v2.6
         with:
           iso-profiles-repo: https://github.com/bittin/iso-profiles-1
