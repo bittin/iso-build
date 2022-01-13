@@ -28,7 +28,7 @@ jobs:
     needs: [prepare-release]
     strategy:
       matrix:
-        edition: [sway]
+        edition: [awesome]
         branch: [stable, unstable]
         scope: [full, minimal]
         kernel: 
