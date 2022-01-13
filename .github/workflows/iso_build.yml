@@ -27,11 +27,13 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [prepare-release]
     strategy:
+      fail-fast: false
       matrix:
         edition: [awesome]
         branch: [stable, unstable]
         scope: [full, minimal]
-        kernel: 
+        kernel:
+          - ${{ needs.prepare-release.outputs.mainline }}
           - ${{ needs.prepare-release.outputs.longterm }}
           - ${{ needs.prepare-release.outputs.stable }}
     steps:
