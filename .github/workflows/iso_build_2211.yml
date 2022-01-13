@@ -23,7 +23,7 @@ jobs:
       release_tag: ${{ steps.time.outputs.time }}
       longterm: ${{ steps.receive.outputs.longterm-pkg }}
       stable: ${{ steps.receive.outputs.stable-pkg }}
-  build-release:
+    build-release:
     runs-on: ubuntu-20.04
     needs: [prepare-release]
     strategy:
