@@ -31,7 +31,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        experimental: [false]
         edition: [awesome]
         branch: [stable, unstable]
         scope: [full, minimal]
