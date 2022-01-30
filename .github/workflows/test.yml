@@ -1,0 +1,63 @@
+name: iso_build
+on:
+  schedule:
+    - cron:  '30 2 * * 0'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [iso_profile_update]
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDDHHmm'
+      - id: receive
+        
+    outputs:
+      release_tag: ${{ steps.time.outputs.time }}
+      longterm: ${{ steps.receive.outputs.longterm-pkg }}
+      stable: ${{ steps.receive.outputs.stable-pkg }}
+      mainline: ${{ steps.receive.outputs.mainline-pkg }}
+  build-release:
+    runs-on: ubuntu-20.04
+    needs: [prepare-release]
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        experimental: [false]
+        edition: [awesome]
+        branch: [stable, unstable]
+        scope: [full, minimal]
+        kernel:
+          - ${{ needs.prepare-release.outputs.longterm }}
+          - ${{ needs.prepare-release.outputs.stable }}
+        include:
+          - kernel: ${{ needs.prepare-release.outputs.mainline }}
+            experimental: true
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - name: image-build-upload
+        uses: Manjaro/manjaro-iso-action@v2.6
+        with:
+          iso-profiles-repo: https://github.com/bittin/iso-profiles-1
+          edition: ${{ matrix.edition }}
+          branch: ${{ matrix.branch }}
+          scope: ${{ matrix.scope }}
+          kernel: ${{ matrix.kernel }}
+          release-tag: ${{ needs.prepare-release.outputs.release_tag }}
+          additional-trusted-gpg: ${{ secrets.GPG_KEYID }}
+      - name: rollback
+        if: ${{ failure() || cancelled() }}
+        run: |
+          echo ${{ github.token }} | gh auth login --with-token
+          gh release delete ${{ needs.prepare-release.outputs.release_tag }} -y --repo ${{ github.repository }}
+          git push --delete origin ${{ needs.prepare-release.outputs.release_tag }}
