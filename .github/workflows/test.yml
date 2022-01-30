@@ -17,7 +17,7 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YYYYMMDDHHmm'
-      - id: receive
+
         
     outputs:
       release_tag: ${{ steps.time.outputs.time }}
