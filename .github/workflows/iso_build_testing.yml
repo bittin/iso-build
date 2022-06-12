@@ -33,7 +33,7 @@ jobs:
       matrix:
         experimental: [true]
         edition: [awesome]
-        branch: [stable, unstable]
+        branch: [stable, unstable, testing]
         scope: [full, minimal]
         kernel:
           - ${{ needs.prepare-release.outputs.mainline }}
