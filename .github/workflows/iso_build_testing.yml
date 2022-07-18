@@ -34,7 +34,7 @@ jobs:
         experimental: [true]
         edition: [awesome]
         branch: [unstable, testing]
-        scope: [full, minimal]
+        scope: [stable, full, minimal]
         kernel:
           - ${{ needs.prepare-release.outputs.mainline }}
           - ${{ needs.prepare-release.outputs.longterm }}
