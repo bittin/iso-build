@@ -38,7 +38,7 @@ jobs:
         kernel: 
           - ${{ needs.prepare-release.outputs.longterm }}
         include:
-          - edition: sway
+          - edition: awesome
             branch: unstable
             scope: full
             kernel: ${{ needs.prepare-release.outputs.stable }}
@@ -47,7 +47,7 @@ jobs:
       - uses: styfle/cancel-workflow-action@0.10.0
         with:
           access_token: ${{ github.token }}
-      - name: import sway key
+      - name: import awesome key
         run: |
           gpg --keyserver keys.openpgp.org --receive-keys ${{ secrets.GPG_KEYID }}
       - name: image-build-upload
