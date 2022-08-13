@@ -27,7 +27,7 @@ jobs:
   build-release:
     runs-on: ubuntu-20.04
     needs: [prepare-release]
-    continue-on-error: ${{ matrix.experimental == "true" }}
+
     strategy:
       fail-fast: false
       matrix:
