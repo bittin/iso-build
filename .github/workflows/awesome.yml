@@ -51,7 +51,7 @@ jobs:
         run: |
           gpg --keyserver keys.openpgp.org --receive-keys ${{ secrets.GPG_KEYID }}
       - name: image-build-upload
-        uses: Manjaro/manjaro-iso-action@v2.6
+        uses: Manjaro/manjaro-iso-action@v2.7
         with:
           iso-profiles-repo: https://github.com/bittin/iso-profiles-1
           edition: ${{ matrix.edition }}
