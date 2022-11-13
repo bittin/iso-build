@@ -47,7 +47,7 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - name: image-build-upload
-        uses: Manjaro/manjaro-iso-action@v2.7
+        uses: Manjaro/manjaro-iso-action@v2.8
         with:
           iso-profiles-repo: https://github.com/bittin/iso-profiles-1
           edition: ${{ matrix.edition }}
